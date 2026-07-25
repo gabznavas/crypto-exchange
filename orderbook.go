@@ -36,9 +36,28 @@ func NewLimit(price float64) *Limit {
 }
 
 func (l *Limit) AddOrder(o *Order) {
+
+	// Vincular o limite na order
+	// Adicionar a order na lista de limit
 	o.Limit = l
 	l.Orders = append(l.Orders, o)
+
+	// soma de todos sizes das orders
 	l.TotalVolume += o.Size
+}
+
+func (l *Limit) DeleteOrder(o *Order) {
+	for i := 0; i < len(l.Orders); i++ {
+		if l.Orders[i] == o {
+			l.Orders[i] = l.Orders[len(l.Orders)-1]
+			l.Orders = l.Orders[:len(l.Orders)-1]
+		}
+	}
+
+	o.Limit = nil
+	l.TotalVolume -= o.Size
+
+	// resort orders
 }
 
 type Orderbook struct {
